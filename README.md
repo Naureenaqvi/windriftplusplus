@@ -1,2 +1,46 @@
 # windriftplusplus
 This repository provide resources on Windrift++ concept drift detection technique.
+
+
+The implementation:
+
+* Accepts streaming dataBlocks (or a batch of blocks you iterate over).
+* Maintains multiple window levels (from winlevsize).
+* Computes ECDFs for historical vs new windows.
+* Runs five ECDF-based distance tests:
+    * Kolmogorov–Smirnov (KS)
+    * Kuiper (custom implementation)
+    * Cramér–von Mises (CvM) via SciPy
+    * Anderson–Darling (AD) via SciPy (anderson_ksamp)
+    * Earth Mover’s Distance (EMD / 1D Wasserstein)
+* Produces dF = [dF1..dF5] (True=drift detected by that test) and a majority-vote decision.
+* Provides flexible parameters and an example usage at the end.
+
+Requirements: numpy, scipy (for statistical tests & EMD). Install with pip install numpy scipy.
+Paste this file into windrift_plus.py (or run in a notebook). I kept the code readable and commented.
+ 
+
+Notes & suggestions:
+
+* Modes and indices (k1,l1,k2,l2) — I implemented a practical mapping to the algorithm: k1,l1 are the basic historical/new window sizes (equal to the winlevsize element). k2,l2 are extended versions for Mode II based on max_cycle_len and the number of blocks processed. If you want the exact formula from your paper (with i, j, m, o) mapped differently, tell me a sample winlevsize + expected k1..l2 values and I'll adapt the index math to match precisely.
+* Kuiper p-values: Kuiper p-value isn't built into SciPy; I provided an optional permutation test (kuiper_perm parameter) to get an empirical p-value. That is accurate but can be slow for large samples or many permutations. If kuiper_perm=0 (default here is 0 unless you set it), a heuristic threshold is used.
+* AD p-value behavior: anderson_ksamp returns a statistic and a significance_level that some SciPy versions expose differently. I tried to handle variants safely. If you prefer a different AD implementation, I can change to approximate AD p-values via bootstrap.
+* EMD: I used scipy.stats.wasserstein_distance (1D EMD). There is no standard p-value; I used a simple heuristic threshold: 0.5 * pooled_std. You may tune that or use bootstrap/permutation for p-values.
+* Performance: The code stores a growing data_buffer. For long-running streams you may want to cap buffer length (e.g., keep only the last N samples) or periodically compact older non-required data. I left this explicit so you can control retention.
+* Customization: If you want:
+    * exact index math per your paper (with variables i,j,m,o)
+    * persistent window indices returned as dBnum in each call
+    * different aggregation rule (AND-of-levels vs OR-of-levels per test) or different voting weightings
+    * bootstrap p-values for any test
+* k1 l1 k2 l2 =i⋅j=i⋅(j+1)=((m−1)⋅o)+k1 =(m⋅o)+k1 (WH1  historical)(WN1  new)(WH2  Mode II historical)(WN2  Mode II new)
+    * Where:
+    * i = unit size of a window from winlevsize
+    * j = sliding window index for each level
+    * m = cycle count after maxCycLen
+    * o = number of blocks to reach maxCycLen
+* Returning dBnum: Each add_block() call will return not just drift flags but also the computed dBnum = {k1, l1, k2, l2} per level.
+* Unit test: We’ll add a small test function (test_windrift_plus()) that simulates drifted data and checks detection.
+* Each add_block() now returns the full dBnum dictionary for each level.
+* A unit test (test_windrift_plus) that simulates drift (mean shift after 15 blocks) and prints dBnum values.
+* Runs all five tests (KS, Kuiper, CvM, AD, EMD) for each block.
+* Prints the full drift flags (dF) and the majority decision after block 15 when drift is introduced.
