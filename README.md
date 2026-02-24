@@ -202,12 +202,16 @@ python -m pytest tests/ -v
 ## Citation
 
 ```bibtex
-@article{naqvi2023windriftpp,
-  title   = {WinDrift++: A Diversified Detector for Concept Drift},
-  author  = {Naqvi, Syed and Rehman, Muhammad Habib Ur and Islam, Rafiqul},
-  journal = {IEEE Transactions on Artificial Intelligence},
-  year    = {2023},
-  doi     = {10.1109/TAI.2023.3293657}
+@ARTICLE{naqvi2023windriftpp,
+  author={Naqvi, Naureen and Rehman, Sabih ur and Islam, Md Zahidul},
+  journal={IEEE Transactions on Artificial Intelligence}, 
+  title={WinDrift++:A diversified detector for concept drift}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-16},
+  keywords={Detectors;Concept drift;Time series analysis;Incremental learning;Robustness;Accuracy;Synthetic data;Mathematical models;Ensemble learning;Computational efficiency;Concept Drift Detection;Incremental Learning;Ensemble Methods;Statistical Hypothesis Testing;Data Streams;Non-Stationary Environments},
+  doi={10.1109/TAI.2025.3619461}}
 }
 ```
 
