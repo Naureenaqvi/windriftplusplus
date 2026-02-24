@@ -4,9 +4,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Paper: IEEE TAI 2023](https://img.shields.io/badge/Paper-IEEE%20TAI%202023-red.svg)](https://doi.org/10.1109/TAI.2023.3293657)
 
-Python implementation of **WinDrift++** — a diversified concept drift detector using an ensemble of five non-parametric statistical tests across sliding time windows.
+Python implementation of **WinDrift++** — a diversified detector for concept drift.
 
-> Naqvi, S., Rehman, M.H.U., & Islam, R. (2023). *WinDrift++: A Diversified Detector for Concept Drift*. IEEE Transactions on Artificial Intelligence.
+> N. Naqvi, S. u. Rehman, and M. Z. Islam, “Windrift++:a diversified detector for concept drift,” IEEE Transactions on Artificial Intelligence, pp. 1–16, 2025.
 
 ---
 
